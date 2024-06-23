@@ -1,0 +1,12 @@
+Django
+djangorestframework
+django-qr-code
+dj-rest-auth
+django-allauth
+stripe
+django-cors-headers
+django-environ
+celery
+django-celery-beat
+djangorestframework-simplejwt
+django-extensions
