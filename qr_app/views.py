@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Waiter, Review, Payment, Establishment, RegistrationRequest
 from .serializers import (
-    WaiterSerializer, ReviewSerializer, PaymentSerializer, EstablishmentSerializer,
+    WaiterSerializer, WaiterDetailSerializer, ReviewSerializer, PaymentSerializer, EstablishmentSerializer,
     RegistrationRequestSerializer
 )
 import qrcode
@@ -32,10 +32,7 @@ def submit_registration_request(request):
 
 
 def approve_registration_request(request, request_id):
-    try:
-        registration_request = RegistrationRequest.objects.get(pk=request_id)
-    except RegistrationRequest.DoesNotExist:
-        return HttpResponse(f'Заявка с id {request_id} не найдена.', status=status.HTTP_404_NOT_FOUND)
+    registration_request = get_object_or_404(RegistrationRequest, pk=request_id)
 
     registration_request.status = 'approved'
     registration_request.save()
@@ -70,6 +67,11 @@ class WaiterListCreateAPIView(generics.ListCreateAPIView):
         waiter = serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class WaiterDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Waiter.objects.all()
+    serializer_class = WaiterDetailSerializer
 
 
 class ReviewListCreateAPIView(generics.ListCreateAPIView):

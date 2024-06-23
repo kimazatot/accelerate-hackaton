@@ -1,5 +1,11 @@
-from django.urls import path, include
-from .views import *
+from django.urls import path
+from .views import (
+    WaiterListCreateAPIView, WaiterDetailAPIView,
+    ReviewListCreateAPIView, ReviewDetailAPIView,
+    PaymentListCreateAPIView, PaymentDetailAPIView,
+    EstablishmentListCreateAPIView, EstablishmentDetailAPIView,
+    submit_registration_request, approve_registration_request
+)
 
 urlpatterns = [
     path('waiters/', WaiterListCreateAPIView.as_view(), name='waiter-list'),
@@ -13,4 +19,7 @@ urlpatterns = [
 
     path('establishments/', EstablishmentListCreateAPIView.as_view(), name='establishment-list'),
     path('establishments/<uuid:pk>/', EstablishmentDetailAPIView.as_view(), name='establishment-detail'),
+
+    path('submit-registration/', submit_registration_request, name='submit-registration'),
+    path('approve-registration/<int:request_id>/', approve_registration_request, name='approve-registration'),
 ]
