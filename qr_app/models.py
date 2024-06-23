@@ -8,6 +8,22 @@ from PIL import Image as PilImage
 from uuid import uuid4
 
 
+class RegistrationRequest(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+
+    establishment_name = models.CharField(max_length=255)
+    contact_email = models.EmailField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Registration Request for {self.establishment_name} ({self.status})"
+
+
 class Payment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -56,6 +72,7 @@ class Waiter(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     age = models.IntegerField()
+    photo = models.ImageField(upload_to='waiter_photos/', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -105,6 +122,3 @@ class Establishment(models.Model):
 
     def __str__(self):
         return f"Establishment - {self.owner_name}"
-
-
-

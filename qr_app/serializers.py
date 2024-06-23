@@ -1,5 +1,12 @@
 from rest_framework import serializers
-from .models import Payment, Review, Waiter, Establishment
+from .models import Payment, Review, Waiter, Establishment, RegistrationRequest
+
+
+class RegistrationRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegistrationRequest
+        fields = ('id', 'establishment_name', 'contact_email', 'status', 'created_at')
+        read_only_fields = ('id', 'status', 'created_at')
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -20,11 +27,10 @@ class PaymentSerializer(serializers.ModelSerializer):
         ]
 
 
-
 class WaiterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Waiter
-        fields = ['id', 'name', 'age']
+        fields = ['id', 'name', 'age', 'photo']
 
 
 class ReviewSerializer(serializers.ModelSerializer):

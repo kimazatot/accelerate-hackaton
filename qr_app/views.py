@@ -1,20 +1,24 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .models import Waiter, Review, Payment, Establishment
-from .serializers import WaiterSerializer, ReviewSerializer, PaymentSerializer, EstablishmentSerializer
-
-
-from .models import Payment
+from .models import Waiter, Review, Payment, Establishment, RegistrationRequest
+from .serializers import (
+    WaiterSerializer, ReviewSerializer, PaymentSerializer, EstablishmentSerializer,
+    RegistrationRequestSerializer
+)
 import qrcode
 
 
+@require_http_methods(["POST", "GET"])
 def submit_registration_request(request):
     if request.method == 'POST':
         establishment_name = request.POST.get('establishment_name')
         contact_email = request.POST.get('contact_email')
+
+        if not establishment_name or not contact_email:
+            return HttpResponse('Некорректные данные для заявки на регистрацию.', status=status.HTTP_400_BAD_REQUEST)
 
         registration_request = RegistrationRequest.objects.create(
             establishment_name=establishment_name,
@@ -28,7 +32,11 @@ def submit_registration_request(request):
 
 
 def approve_registration_request(request, request_id):
-    registration_request = RegistrationRequest.objects.get(pk=request_id)
+    try:
+        registration_request = RegistrationRequest.objects.get(pk=request_id)
+    except RegistrationRequest.DoesNotExist:
+        return HttpResponse(f'Заявка с id {request_id} не найдена.', status=status.HTTP_404_NOT_FOUND)
+
     registration_request.status = 'approved'
     registration_request.save()
 
@@ -62,11 +70,6 @@ class WaiterListCreateAPIView(generics.ListCreateAPIView):
         waiter = serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class WaiterDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Waiter.objects.all()
-    serializer_class = WaiterSerializer
 
 
 class ReviewListCreateAPIView(generics.ListCreateAPIView):
