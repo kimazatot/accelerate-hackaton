@@ -5,7 +5,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Waiter, Review, Payment, Establishment, RegistrationRequest
 from .serializers import (
-    WaiterSerializer, WaiterDetailSerializer, ReviewSerializer, PaymentSerializer, EstablishmentSerializer,
+    WaiterSerializer, ReviewSerializer, PaymentSerializer, EstablishmentSerializer,
     RegistrationRequestSerializer
 )
 import qrcode
@@ -71,7 +71,7 @@ class WaiterListCreateAPIView(generics.ListCreateAPIView):
 
 class WaiterDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Waiter.objects.all()
-    serializer_class = WaiterDetailSerializer
+    serializer_class = WaiterSerializer
 
 
 class ReviewListCreateAPIView(generics.ListCreateAPIView):
