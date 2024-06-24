@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
-from .models import Waiter, Review, Payment, Establishment, RegistrationRequest
+from .models import Waiter, Review, Payment, QRCode, RegistrationRequest
 from .serializers import (
-    WaiterSerializer, ReviewSerializer, PaymentSerializer, EstablishmentSerializer,
+    WaiterSerializer, ReviewSerializer, PaymentSerializer, QRCodeSerializer,
     RegistrationRequestSerializer
 )
 import qrcode
@@ -111,18 +111,6 @@ class PaymentDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PaymentSerializer
 
 
-class EstablishmentListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Establishment.objects.all()
-    serializer_class = EstablishmentSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        establishment = serializer.save()
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class EstablishmentDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Establishment.objects.all()
-    serializer_class = EstablishmentSerializer
+class QRCodeViewSet(viewsets.ModelViewSet):
+    queryset = QRCode.objects.all()
+    serializer_class = QRCodeSerializer

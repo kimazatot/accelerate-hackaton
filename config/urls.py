@@ -21,12 +21,6 @@ from qr_app import views as qr_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/account/', include('account.urls')),
-    path('api/v1/qr_app/waiters/', qr_views.WaiterListCreateAPIView.as_view(), name='waiter-list-create'),
-    path('api/v1/qr_app/waiters/<int:pk>/', qr_views.WaiterDetailAPIView.as_view(), name='waiter-detail'),
-
-    path('api/v1/qr_app/waiters/<int:waiter_id>/reviews/', qr_views.ReviewListCreateAPIView.as_view(), name='review-list-create'),
-    path('api/v1/qr_app/waiters/<int:waiter_id>/reviews/<int:pk>/', qr_views.ReviewDetailAPIView.as_view(), name='review-detail'),
-
-    path('api/v1/qr_app/payments/', qr_views.PaymentListCreateAPIView.as_view(), name='payment-list-create'),
-    path('api/v1/qr_app/payments/<int:pk>/', qr_views.PaymentDetailAPIView.as_view(), name='payment-detail'),
+    path('api/v1/', include('establishment.urls')),
+    path('api/', include('qr_app.urls'))
 ]

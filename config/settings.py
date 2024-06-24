@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     # 'drf_yasg',
 
     'account',
-    'qr_app'
+    'qr_app',
+    'establishment',
 ]
 
 MIDDLEWARE = [

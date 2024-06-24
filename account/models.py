@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractBaseUser, Group, Permission
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -29,7 +29,7 @@ class CustomUserManager(BaseUserManager):
         return self._create(email, password, **extra_fields)
 
 
-class CustomUser(AbstractUser):
+class CustomUser(AbstractBaseUser):
     email = models.EmailField(_('email address'), unique=True)
 
     groups = models.ManyToManyField(
@@ -53,15 +53,3 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
-
-
-class Establishment(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='establishments')
-    name = models.CharField(_('name'), max_length=255)
-    address = models.TextField(_('address'))
-    pending_approval = models.BooleanField(_('pending approval'), default=True)
-    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
-
-    def __str__(self):
-        return self.name

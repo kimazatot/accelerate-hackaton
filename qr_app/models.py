@@ -6,6 +6,7 @@ from io import BytesIO
 import qrcode
 from PIL import Image as PilImage
 from uuid import uuid4
+from .utils import generate_qr_code
 
 
 class RegistrationRequest(models.Model):
@@ -89,36 +90,14 @@ class Review(models.Model):
         return f"Review #{self.id} for {self.waiter.name}"
 
 
-class Establishment(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    owner_name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=20)
-    address = models.TextField()
+class QRCode(models.Model):
+    data = models.TextField()
+    qr_code_image = models.ImageField(upload_to='qr_codes', blank=True, null=True)
 
-    @property
-    def qr_code_url(self):
-        return reverse('establishment-qr', args=[str(self.id)])
-
-    def generate_qr_code(self):
-        data = f"Owner: {self.owner_name}\nPhone: {self.phone_number}\nAddress: {self.address}"
-
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(data)
-        qr.make(fit=True)
-
-        img = qr.make_image(fill_color="black", back_color="white")
-
-        # Save the generated QR code in a buffer
-        buffer = BytesIO()
-        img.save(buffer, format='PNG')
-        buffer.seek(0)
-
-        return buffer
+    def save(self, *args, **kwargs):
+        qr_code_file = generate_qr_code(self.data)
+        self.qr_code_image.save(f"{self.id}_qr.png", qr_code_file, save=False)
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Establishment - {self.owner_name}"
+        return f"QR Code {self.id}"

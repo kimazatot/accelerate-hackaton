@@ -3,9 +3,12 @@ from .views import (
     WaiterListCreateAPIView, WaiterDetailAPIView,
     ReviewListCreateAPIView, ReviewDetailAPIView,
     PaymentListCreateAPIView, PaymentDetailAPIView,
-    EstablishmentListCreateAPIView, EstablishmentDetailAPIView,
-    submit_registration_request, approve_registration_request
+    submit_registration_request, approve_registration_request, QRCodeViewSet
 )
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'qrcodes', QRCodeViewSet)
 
 urlpatterns = [
     path('waiters/', WaiterListCreateAPIView.as_view(), name='waiter-list'),
@@ -16,9 +19,6 @@ urlpatterns = [
 
     path('payments/', PaymentListCreateAPIView.as_view(), name='payment-list'),
     path('payments/<uuid:pk>/', PaymentDetailAPIView.as_view(), name='payment-detail'),
-
-    path('establishments/', EstablishmentListCreateAPIView.as_view(), name='establishment-list'),
-    path('establishments/<uuid:pk>/', EstablishmentDetailAPIView.as_view(), name='establishment-detail'),
 
     path('submit-registration/', submit_registration_request, name='submit-registration'),
     path('approve-registration/<int:request_id>/', approve_registration_request, name='approve-registration'),

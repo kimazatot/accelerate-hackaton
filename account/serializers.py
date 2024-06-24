@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Establishment
 
 User = get_user_model()
 
@@ -40,10 +39,3 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
-class EstablishmentSerializer(serializers.ModelSerializer):
-    owner_email = serializers.EmailField(source='owner.email', read_only=True)
-
-    class Meta:
-        model = Establishment
-        fields = ('id', 'owner', 'owner_email', 'name', 'address', 'pending_approval', 'created_at')
-        read_only_fields = ('id', 'owner', 'pending_approval', 'created_at')

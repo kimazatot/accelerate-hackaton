@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Payment, Review, Waiter, Establishment, RegistrationRequest
+from .models import Payment, Review, Waiter, RegistrationRequest, QRCode
 
 
 class RegistrationRequestSerializer(serializers.ModelSerializer):
@@ -39,15 +39,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ['id', 'waiter', 'stars', 'comment', 'created_at']
 
 
-class EstablishmentSerializer(serializers.ModelSerializer):
-    qr_code_url = serializers.URLField(source='qr_code_url', read_only=True)
-
+class QRCodeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Establishment
-        fields = [
-            'id',
-            'owner_name',
-            'phone_number',
-            'address',
-            'qr_code_url',
-        ]
+        model = QRCode
+        fields = ['id', 'data', 'qr_code_image']
