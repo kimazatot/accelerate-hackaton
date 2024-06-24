@@ -1,3 +1,4 @@
+# establishment/models.py
 from django.db import models
 from qr_app.utils import generate_qr_code
 
@@ -10,14 +11,22 @@ class Establishment(models.Model):
     qr_code = models.ImageField(upload_to='qr_codes', blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        qr_data = f"Address: {self.address}, Owner: {self.owner_name}, Phone: {self.owner_phone}, URL: {self.get_absolute_url()}"
+        if not self.pk:
+            super().save(*args, **kwargs)
+
+        qr_data = self.get_tip_payment_url()
         qr_code_file = generate_qr_code(qr_data)
         self.qr_code.save(f"{self.name}_qr.png", qr_code_file, save=False)
+
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('establishment-detail', kwargs={'pk': self.pk})
+
+    def get_tip_payment_url(self):
+        from django.urls import reverse
+        return reverse('tip-payment', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.name

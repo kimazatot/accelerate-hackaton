@@ -21,6 +21,6 @@ from qr_app import views as qr_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/account/', include('account.urls')),
-    path('api/v1/', include('establishment.urls')),
-    path('api/v1', include('qr_app.urls'))
+    path('api/v1/establishment/', include('establishment.urls')),
+    path('api/v1/qr_code/', include('qr_app.urls'))
 ]
