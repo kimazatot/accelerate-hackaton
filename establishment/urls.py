@@ -1,8 +1,12 @@
 # establishments/urls.py
-from django.urls import path
-from .views import EstablishmentListCreateAPIView, EstablishmentDetailAPIView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import EstablishmentViewSet, TipViewSet
+
+router = DefaultRouter()
+router.register(r'establishments', EstablishmentViewSet)
+router.register(r'tips', TipViewSet)
 
 urlpatterns = [
-    path('establishments/', EstablishmentListCreateAPIView.as_view(), name='establishment-list'),
-    path('establishments/<uuid:pk>/', EstablishmentDetailAPIView.as_view(), name='establishment-detail'),
+    path('', include(router.urls))
 ]
