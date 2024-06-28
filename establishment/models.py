@@ -1,4 +1,3 @@
-# establishment/models.py
 from django.db import models
 from qr_app.utils import generate_qr_code
 

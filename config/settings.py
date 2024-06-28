@@ -41,7 +41,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders',
     # 'drf_yasg',
 
     'account',
@@ -85,12 +84,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'accelerate',
-        'USER': 'acer',
-        'PASSWORD': 1,
-        'PORT': 5432,
-        'HOST': 'localhost'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
+        # 'USER': 'acer',
+        # 'PASSWORD': 1,
+        # 'PORT': 5432,
+        # 'HOST': 'localhost'
     }
 }
 
